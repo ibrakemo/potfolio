@@ -36,6 +36,7 @@ a.so-media {}
 .intro_button {
     display: flex;
     gap: 20px;
+    flex-wrap: wrap;
 }
 
 a.mail {
@@ -121,6 +122,7 @@ a.mail {
     font-size: 17px;
     font-weight: 600;
     font-family: 'Montserrat Alternates';
+    color: var(--tj-theme-h3-primary-1);
 }
 
 .intro_contant_P {
@@ -150,11 +152,15 @@ a.mail {
 
 .intro_image {
     min-width: max-content;
+    max-width: max-content;
 }
 
 .the_imge {
     position: relative;
+    text-align: center;
 }
+
+.the_imge::before {}
 
 .the_imge:hover::before {
     transform: rotate(0deg);
@@ -206,7 +212,7 @@ a.mail {
         --tj-theme-accent-2: #140c1c;
 }
 
-.centr-header {display: flex;align-items: center;/* padding-top: 6px; */font-size: 35px;justify-content: space-between;}
+.centr-header {display: flex;align-items: center;/* padding-top: 6px; */font-size: 35px;justify-content: space-between;width: 100%;}
 
 .top-header- {
     box-sizing: border-box;
@@ -254,6 +260,102 @@ a.--sup--menu-point- {
     font-weight: 600;
     padding: 35px 0;
 }
-.container {max-width: 1400px;margin: 0 auto;padding: 0px 15px;position: relative;}
+.container {max-width: 1400px;margin: 0 auto;padding: 0px 40px;position: relative;}
 
 
+@media only screen and (max-width:1440px) {
+    *{}
+
+.container {
+    max-width: 100%;
+    padding: 0 20px;
+}
+}
+
+@media only screen and (max-width:1170px) {
+    *{
+}
+
+.softic-header {
+    padding-top: 13px;
+}
+
+.intro_contant {
+    max-width: 100%;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.intro_flex {
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 61px;
+}
+
+.top-header-2 {
+    display: none;
+}
+}    
+@media only screen and (max-width:590px) {
+    *{
+}
+
+.--title {
+    font-size: 47px;
+}
+
+a.so-media {
+    top: 0;
+    margin-top: 13px;
+}
+
+.intro_contant_P {
+    font-size: 18px;
+}
+
+.intro_title {
+    font-size: 43px;
+}
+
+.before_title {
+    font-size: 33px;
+}
+
+.intro {
+    padding: 50px 0;
+}
+
+.the_imge::before {
+    width: 300px;
+    height: 300px;
+}
+
+.the_imge img {width: 300px;height: 300px;}
+
+img {}
+
+.work_items {
+    justify-content: center;
+}
+
+a.the_item {
+    min-width: 257px;
+}
+
+a.mail {
+    display: none;
+}
+
+.intro_image {
+    min-width: 100%;
+    max-width: 100%;
+}
+
+.intro_button {justify-content: center;}
+
+.top-header- {
+    flex: 1;
+}
+    
+}
