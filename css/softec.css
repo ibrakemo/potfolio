@@ -57,7 +57,7 @@ a.mail {
     height: 523px;
     margin-bottom: 46px;
     border-radius: 20px;
-    box-shadow: 0 0 20px 22px #0000001c;
+    box-shadow: 0 0 20px 3px #00000014;
 }
 
 .the_item:hover img {
@@ -228,8 +228,7 @@ a.i5-k4 {color: white;font-family: var(--tp-ff-mont);height: 42.5px;line-height:
 .long-btm {
     width: 25%;
     text-align: end;
-    /* display: flow; */
-}
+ }
 
 .-yourcolor-menu > ul > li {
     display: inline-block;
@@ -332,9 +331,7 @@ a.so-media {
 }
 
 .the_imge img {width: 300px;height: 300px;}
-
-img {}
-
+ 
 .work_items {
     justify-content: center;
 }
