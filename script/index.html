@@ -117,34 +117,35 @@
     </form>
     <div class="footer">تصميم المهندس : أشرف رمضان</div>
   </div>
-  
   <script>
-    function shareFunction() {
-      alert("تم النقر على زر المشاركة!");
-    }
-
-    document.getElementById('registrationForm').addEventListener('submit', function(e) {
+    document.getElementById("registrationForm").addEventListener("submit", function(e) {
       e.preventDefault();
-
-      var name  = document.getElementById('name').value;
-      var age   = document.getElementById('age').value;
-      var phone = document.getElementById('phone').value;
-      var part  = document.getElementById('part').value;
-      var createdAt = new Date().toLocaleString();
-
-      var registration = { name: name, age: age, phone: phone, part: part, createdAt: createdAt };
-
-      var registrations = localStorage.getItem('registrations');
-      if (registrations) {
-        registrations = JSON.parse(registrations);
-      } else {
-        registrations = [];
-      }
-      registrations.push(registration);
-      localStorage.setItem('registrations', JSON.stringify(registrations));
-
-      alert("تم التسجيل بنجاح.");
-      document.getElementById('registrationForm').reset();
+  
+      // جمع بيانات النموذج
+      const formData = {
+        name: document.getElementById("name").value,
+        age: document.getElementById("age").value,
+        phone: document.getElementById("phone").value,
+        part: document.getElementById("part").value
+      };
+  
+      // إرسال البيانات إلى Google Apps Script عبر fetch
+      fetch("https://script.google.com/macros/s/AKfycbx8vAiBolaLOPufJ44OvfJni-dSVsSdr7jQoAGDBR_jVZojmGuQ1uWPDrWb_uzM1FAc/exec", {
+        method: "POST",
+        mode: "cors",  // استخدام no-cors لتفادي مشاكل الـ CORS
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => {
+        alert("تم التسجيل بنجاح!");
+        document.getElementById("registrationForm").reset();
+      })
+      .catch(error => {
+        console.error("خطأ:", error);
+        alert("حدث خطأ أثناء التسجيل، يرجى المحاولة مرة أخرى.");
+      });
     });
   </script>
 </body>
