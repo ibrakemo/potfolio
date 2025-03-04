@@ -130,23 +130,23 @@
       };
   
       // إرسال البيانات إلى Google Apps Script عبر fetch
-      fetch("https://script.google.com/macros/s/AKfycbx8vAiBolaLOPufJ44OvfJni-dSVsSdr7jQoAGDBR_jVZojmGuQ1uWPDrWb_uzM1FAc/exec", {
-        method: "POST",
-        mode: "cors",  // استخدام no-cors لتفادي مشاكل الـ CORS
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formData)
-      })
-      .then(response => {
-        alert("تم التسجيل بنجاح!");
-        document.getElementById("registrationForm").reset();
-      })
-      .catch(error => {
-        console.error("خطأ:", error);
-        alert("حدث خطأ أثناء التسجيل، يرجى المحاولة مرة أخرى.");
-      });
-    });
+      fetch("YOUR_NEW_DEPLOYMENT_URL", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(formData)
+})
+.then(response => response.json())
+.then(data => {
+  if (data.status === "success") {
+    alert("تم التسجيل بنجاح!");
+  } else {
+    alert("حدث خطأ: " + data.message);
+  }
+})
+.catch(error => {
+  console.error("خطأ:", error);
+});
+
   </script>
 </body>
 </html>
