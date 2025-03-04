@@ -118,6 +118,12 @@
     <div class="footer">تصميم المهندس : أشرف رمضان</div>
   </div>
   <script>
+    // دالة زر "مشاركة" (اختياري)
+    function shareFunction() {
+      alert("شارك رابط المسابقة مع أصدقائك!");
+    }
+
+    // عند إرسال النموذج
     document.getElementById("registrationForm").addEventListener("submit", function(e) {
       e.preventDefault();
   
@@ -131,22 +137,24 @@
   
       // إرسال البيانات إلى Google Apps Script عبر fetch
       fetch("https://script.google.com/macros/s/AKfycbx8vAiBolaLOPufJ44OvfJni-dSVsSdr7jQoAGDBR_jVZojmGuQ1uWPDrWb_uzM1FAc/exec", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(formData)
-})
-.then(response => response.json())
-.then(data => {
-  if (data.status === "success") {
-    alert("تم التسجيل بنجاح!");
-  } else {
-    alert("حدث خطأ: " + data.message);
-  }
-})
-.catch(error => {
-  console.error("خطأ:", error);
-});
-
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === "success") {
+          alert("تم التسجيل بنجاح!");
+          document.getElementById("registrationForm").reset();
+        } else {
+          alert("حدث خطأ: " + data.message);
+        }
+      })
+      .catch(error => {
+        console.error("خطأ:", error);
+        alert("حدث خطأ أثناء التسجيل، يرجى المحاولة مرة أخرى.");
+      });
+    });
   </script>
 </body>
 </html>
