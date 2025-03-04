@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مسابقة القرآن الكريم التابعة لمسجد الأنوار المحمدية</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400&display=swap');
+    body {
+      font-family: 'Amiri', serif;
+      direction: rtl;
+      background: #fdf6e3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #4a4a4a;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: #d4af37;
+    }
+    h2 {
+      font-size: 1.7rem;
+      color: #8b4513;
+    }
+    p {
+      text-align: center;
+      color: #6b7280;
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      font-size: 1rem;
+      color: #333;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #d4af37;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      border: none;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #8b4513;
+    }
+    .share-btn {
+      background-color: #4caf50;
+    }
+    .share-btn:hover {
+      background-color: #388e3c;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>مسابقة حفظ القرآن الكريم</h1>
+    <h2>مسجد الأنوار المحمدية</h2>
+    <p>يرجى ملء النموذج أدناه للتسجيل في المسابقة.</p>
+    <form id="registrationForm">
+      <label for="name">الاسم الكامل:</label>
+      <input type="text" id="name" name="name" placeholder="أدخل اسمك الكامل" required>
+
+      <label for="age">العمر:</label>
+      <input type="number" id="age" name="age" placeholder="أدخل عمرك" required>
+
+      <label for="phone">رقم الهاتف:</label>
+      <input type="tel" id="phone" name="phone" placeholder="أدخل رقم هاتفك" required>
+
+      <label for="part">مستوى الحفظ:</label>
+      <select id="part" name="part" required>
+        <option value="1">جزء</option>
+        <option value="2">جزءان</option>
+        <option value="3">ثلاثة أجزاء</option>
+        <option value="4">أربعة أجزاء</option>
+        <option value="5">خمسة أجزاء</option>
+        <option value="10">عشرة أجزاء</option>
+        <option value="15">خمسة عشر جزءًا</option>
+        <option value="20">عشرون جزءًا</option>
+        <option value="25">خمسة وعشرون جزءًا</option>
+        <option value="30">ثلاثون جزءًا</option>
+      </select>
+
+      <button type="submit">تسجيل</button>
+      <button type="button" class="share-btn" onclick="shareFunction()">مشاركة</button>
+    </form>
+    <div class="footer">تصميم المهندس : أشرف رمضان</div>
+  </div>
+  
+  <script>
+    function shareFunction() {
+      alert("تم النقر على زر المشاركة!");
+    }
+
+    document.getElementById('registrationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      var name  = document.getElementById('name').value;
+      var age   = document.getElementById('age').value;
+      var phone = document.getElementById('phone').value;
+      var part  = document.getElementById('part').value;
+      var createdAt = new Date().toLocaleString();
+
+      var registration = { name: name, age: age, phone: phone, part: part, createdAt: createdAt };
+
+      var registrations = localStorage.getItem('registrations');
+      if (registrations) {
+        registrations = JSON.parse(registrations);
+      } else {
+        registrations = [];
+      }
+      registrations.push(registration);
+      localStorage.setItem('registrations', JSON.stringify(registrations));
+
+      alert("تم التسجيل بنجاح.");
+      document.getElementById('registrationForm').reset();
+    });
+  </script>
+</body>
+</html>
