@@ -1,0 +1,414 @@
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>MY QUEEN</title>
+  <style>
+    :root{
+      --bg1:#0f0c29; /* deep plum */
+      --bg2:#302b63; /* royal indigo */
+      --bg3:#24243e; /* night blue */
+      --card:#ffffff;
+      --ink:#1b1b1b;
+      --accent:#ff3d68;
+      --soft:#ffb3c1;
+      --glass:rgba(255,255,255,.08);
+    }
+
+    *{box-sizing:border-box}
+
+    html,body{
+      height:100%;
+      margin:0;
+      padding:0;
+      background: radial-gradient(1200px 800px at 10% 10%, rgba(255,255,255,.06), transparent 60%),
+                  radial-gradient(1200px 800px at 90% 90%, rgba(255,255,255,.05), transparent 60%),
+                  linear-gradient(135deg,var(--bg1),var(--bg2) 40%,var(--bg3));
+      color:var(--ink);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      touch-action:manipulation;
+      font-family: ui-rounded, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    /* Canvas covers the screen */
+    #scene{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      display:block;
+      z-index:0;
+    }
+
+    /* Center content card */
+    .wrap{
+      position:relative;
+      z-index:2;
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:clamp(16px, 4vw, 32px);
+    }
+
+    .card{
+      width:min(680px, 92vw);
+      background:linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.92));
+      border:1px solid rgba(255,255,255,.6);
+      border-radius:20px;
+      box-shadow:
+        0 30px 60px rgba(0,0,0,.25),
+        inset 0 1px 0 rgba(255,255,255,.6);
+      backdrop-filter:saturate(140%) blur(12px);
+      -webkit-backdrop-filter:saturate(140%) blur(12px);
+      overflow:hidden;
+    }
+
+    .card__header{
+      padding:20px 22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      background:linear-gradient(0deg, rgba(255,255,255,.55), rgba(255,255,255,.75));
+      border-bottom:1px solid rgba(0,0,0,.06);
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-weight:700;
+      letter-spacing:.4px;
+      color:#c2173f;
+      text-shadow:0 1px 0 rgba(255,255,255,.6);
+    }
+    .badge__dot{
+      width:10px;height:10px;border-radius:50%;
+      background:conic-gradient(from 0deg, #ff6b81, #ffd1dc, #ff6b81);
+      box-shadow:0 0 10px rgba(255,61,104,.65), 0 0 2px rgba(255,61,104,1);
+      animation: pulse 1.8s infinite ease-in-out;
+    }
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.4)}}
+
+    .meta{
+      font-size:13px;
+      color:#555;
+    }
+
+    .card__body{
+      padding:26px 22px 28px;
+    }
+
+    h1{
+      margin:0 0 8px 0;
+      font-size: clamp(28px, 5.5vw, 38px);
+      line-height:1.25;
+      color:#111;
+      letter-spacing:.2px;
+    }
+    p{
+      margin:0;
+      font-size: clamp(16px, 4.3vw, 18px);
+      line-height:1.9;
+      color:#333;
+    }
+
+    .type{
+      min-height: 6lh; /* keep space reserved for typing */
+      white-space:pre-wrap;
+    }
+
+    .cta{
+      margin-top:18px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      appearance:none;
+      border:none;
+      border-radius:14px;
+      padding:14px 18px;
+      font-weight:700;
+      font-size:16px;
+      cursor:pointer;
+      background:linear-gradient(180deg, #ff7a90, #ff3d68);
+      color:white;
+      box-shadow: 0 10px 26px rgba(255,61,104,.35), inset 0 -2px 0 rgba(0,0,0,.15);
+      transform: translateZ(0);
+      transition: transform .15s ease, filter .15s ease;
+      will-change: transform;
+    }
+    .btn:active{ transform: scale(.98) }
+    .btn--ghost{
+      background:transparent;
+      color:#c2173f;
+      border:2px solid rgba(255,61,104,.35);
+      box-shadow:none;
+    }
+
+    .footer{
+      margin-top:22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      color:#666;
+      font-size:13px;
+    }
+    .footer .chip{
+      padding:8px 12px;border-radius:999px;background:#f6f2f6;border:1px solid rgba(0,0,0,.06);color:#444;
+    }
+
+    .hint{
+      position:fixed;left:50%;bottom:14px;transform:translateX(-50%);
+      background:rgba(255,255,255,.88);
+      padding:8px 14px;border-radius:999px;
+      border:1px solid rgba(0,0,0,.06);
+      font-size:13px;color:#333;z-index:3;
+      box-shadow:0 10px 18px rgba(0,0,0,.12);
+    }
+
+    .heart-cursor{
+      position:fixed;pointer-events:none;z-index:4;inset:0;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      #scene{display:none}
+      .badge__dot{animation:none}
+    }
+  </style>
+</head>
+<body>
+  <canvas id="scene" aria-hidden="true"></canvas>
+
+  <div class="wrap">
+    <article class="card" role="article" aria-label="رسالة شخصية">
+      <header class="card__header">
+        <div class="badge"><span class="badge__dot" aria-hidden="true"></span><span>للأبد ❤️</span></div>
+        <div class="meta" id="date"></div>
+      </header>
+      <div class="card__body">
+        <h1>منّي ليكي</h1>
+        <p id="typed" class="type" aria-live="polite" aria-atomic="true"></p>
+        <div class="cta">
+          <button id="start" class="btn" type="button">دوسي هنا ي عطيه</button>
+          <button id="burst" class="btn btn--ghost" type="button" title="قلوب إضافية">لو دوستي هنا الشاشه هطلع قلوب</button>
+        </div>
+        <div class="footer">
+          <span class="chip">لو لمسـتي الشاشة: قلوب أكتر 💗</span>
+         </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="hint" id="hint">اضغطي في أي مكان ❤️</div>
+
+  <script>
+    // --- Utilities ---
+    const $ = (sel, ctx=document) => ctx.querySelector(sel);
+
+    // Localized date
+    try{
+      const now = new Date();
+      const formatted = new Intl.DateTimeFormat('ar-EG', {
+        dateStyle:'full'
+      }).format(now);
+      $('#date').textContent = formatted;
+    }catch(e){ $('#date').textContent = ''; }
+
+    // --- Typing effect ---
+    const messageLines = [
+      " انا مش هرغي كتير بس بس عايز اوصل رساله ...😂 ",
+      "بس اللي أكيد: إني بحبِّك، كل يوم أكتر من اللي قبله.",
+      "وإنك دايمًا أول وآخر حاجة في بالي.",
+      "ربنا يخليكي ليا يا ست البنات وميحرمنيش منك ابدا وربنا يهدكي عليا ويشفيكي من دماغك التعبانه ديي 😂❤️❤️❤️❤️❤️",
+      "واخر اشي احب اقوله ",
+        "بحبك اويي ❤️❤️",
+    ];
+
+    function typeLines(lines, el, speed=42){
+      return new Promise(resolve=>{
+        el.textContent = '';
+        let iLine = 0, iChar = 0;
+        function tick(){
+          if(iLine >= lines.length){ resolve(); return; }
+          const line = lines[iLine];
+          if(iChar <= line.length){
+            el.textContent = lines.slice(0, iLine).join("\n") + (iLine? "\n": "") + line.slice(0, iChar);
+            iChar++;
+          }else{
+            iLine++; iChar = 0;
+            el.textContent += (iLine < lines.length ? "\n" : "");
+          }
+          setTimeout(tick, speed);
+        }
+        tick();
+      });
+    }
+
+    // --- Hearts scene ---
+    const canvas = document.getElementById('scene');
+    const ctx = canvas.getContext('2d');
+    let W = 0, H = 0, DPR = Math.max(1, Math.min(2, (window.devicePixelRatio || 1)));
+    let hearts = [];
+    const palette = ["#ff3d68","#ff6b81","#ff9aa2","#ffb3c1","#ffd1dc","#ffe3e3"];
+
+    function resize(){
+      W = canvas.clientWidth;
+      H = canvas.clientHeight;
+      canvas.width = Math.floor(W * DPR);
+      canvas.height = Math.floor(H * DPR);
+      ctx.setTransform(DPR,0,0,DPR,0,0);
+    }
+    addEventListener('resize', resize, {passive:true});
+    resize();
+
+    function rand(min, max){ return Math.random() * (max - min) + min; }
+
+    function makeHeart(x, y, burst=false){
+      const size = burst ? rand(10, 20) : rand(6, 14);
+      return {
+        x, y,
+        vx: rand(-.6, .6),
+        vy: rand(-2.2, -1.2),
+        size,
+        rot: rand(0, Math.PI*2),
+        vr: rand(-.02,.02),
+        life: 0,
+        ttl: rand(120, 200),
+        color: palette[Math.floor(rand(0, palette.length))],
+        alpha: 1
+      };
+    }
+
+    function drawHeart(x, y, s, rot, color, alpha){
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rot);
+      ctx.scale(s, s);
+      ctx.beginPath();
+      // Parametric heart made with bezier curves
+      ctx.moveTo(0, -2);
+      ctx.bezierCurveTo(2, -4, 6, -2, 6, 1.5);
+      ctx.bezierCurveTo(6, 4.5, 3.2, 7, 0, 9);
+      ctx.bezierCurveTo(-3.2, 7, -6, 4.5, -6, 1.5);
+      ctx.bezierCurveTo(-6, -2, -2, -4, 0, -2);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      if(alpha < 1){
+        ctx.globalAlpha = alpha;
+      }
+      ctx.shadowColor = "rgba(0,0,0,.15)";
+      ctx.shadowBlur = 6;
+      ctx.shadowOffsetY = 2;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function step(){
+      ctx.clearRect(0,0,W,H);
+
+      // soft glow background
+      const g = ctx.createRadialGradient(W*0.5, H*0.4, 10, W*0.5, H*0.4, Math.max(W,H)*0.8);
+      g.addColorStop(0, "rgba(255,255,255,.06)");
+      g.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,W,H);
+
+      // update & draw hearts
+      for(let i=hearts.length-1;i>=0;i--){
+        const h = hearts[i];
+        h.life++;
+        h.x += h.vx;
+        h.y += h.vy;
+        h.vy += -0.004; // slight upward drift
+        h.vx *= 0.995;
+        h.rot += h.vr;
+        // fade out
+        const t = h.life / h.ttl;
+        h.alpha = Math.max(0, 1 - t);
+        drawHeart(h.x, h.y, h.size, h.rot, h.color, h.alpha);
+        if(h.life > h.ttl || h.y < -20 || h.alpha <= 0){
+          hearts.splice(i,1);
+        }
+      }
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+
+    // Ambient floaters
+    function seedAmbient(){
+      for(let i=0;i<60;i++){
+        hearts.push(makeHeart(rand(0, W), rand(H*0.3, H), false));
+      }
+    }
+    seedAmbient();
+
+    // Burst on pointer
+    function burstAt(x,y, count=36){
+      for(let i=0;i<count;i++){
+        const h = makeHeart(x + rand(-10,10), y + rand(-10,10), true);
+        // Spread outwards
+        const angle = rand(0, Math.PI*2);
+        const speed = rand(1.2, 2.4);
+        h.vx = Math.cos(angle) * speed * 0.8;
+        h.vy = Math.sin(angle) * speed * -0.2 - 1.4;
+        hearts.push(h);
+      }
+    }
+
+    // Pointer events
+    const hint = document.getElementById('hint');
+    let hintTimeout = setTimeout(()=> hint.style.display = 'none', 5000);
+
+    function getXY(e){
+      const rect = canvas.getBoundingClientRect();
+      if(e.touches && e.touches[0]){
+        return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+      }
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }
+
+    window.addEventListener('pointerdown', e=>{
+      const {x,y} = getXY(e);
+      burstAt(x,y, 28);
+      hint.style.display = 'none';
+      clearTimeout(hintTimeout);
+    }, {passive:true});
+
+    window.addEventListener('touchstart', e=>{
+      const {x,y} = getXY(e);
+      burstAt(x,y, 28);
+      hint.style.display = 'none';
+      clearTimeout(hintTimeout);
+    }, {passive:true});
+
+    // Buttons
+    $('#burst').addEventListener('click', ()=> burstAt(W*0.5, H*0.45, 42));
+
+    $('#start').addEventListener('click', async ()=>{
+      const btn = $('#start');
+      btn.disabled = true;
+      btn.textContent = '⋯';
+      await typeLines(messageLines, $('#typed'));
+      btn.textContent = 'بحبِّك ♥︎';
+      // celebratory burst
+      burstAt(W*0.5, H*0.42, 64);
+      setTimeout(()=> burstAt(W*0.5, H*0.5, 48), 400);
+    }, {once:false});
+
+    // Accessibility: keyboard
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' '){
+        $('#start').click();
+      }
+    });
+
+  </script>
+</body>
+</html>
